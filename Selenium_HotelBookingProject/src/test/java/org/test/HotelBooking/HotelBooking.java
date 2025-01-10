@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
+import javax.security.auth.x500.X500Principal;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -30,10 +32,12 @@ public class HotelBooking {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(70));
 
 		driver.findElement(By.id("email")).sendKeys("sasimathiru97@gmail.com");
-	    driver.findElement(By.id("pass")).sendKeys("Sasi@123");
+		driver.findElement(By.id("pass")).sendKeys("Sasi@123");
 		driver.findElement(By.xpath("//button[@type='submit']")).click();
 
 		// 2.Search Hotel
+		driver.findElement(By.xpath("(//h3[@class='mt-4'])[2]")).click();
+
 		WebElement afterLoginMsg = driver.findElement(By.xpath("//a[@data-testid='username']"));
 		String textWelcomeMessageLogin = afterLoginMsg.getText();
 		System.out.println(textWelcomeMessageLogin);
@@ -46,13 +50,14 @@ public class HotelBooking {
 		ddnCity.click();
 		WebElement ddncitySearch = driver.findElement(By.xpath("//input[@class='select2-search__field']"));
 		ddncitySearch.sendKeys("Chennai", Keys.ENTER);
-		
+
 		// Select all
 		WebElement ddnRoomType = driver.findElement(By.xpath("//textarea[@class='select2-search__field']"));
 		ddnRoomType.click();
 		List<WebElement> ddnSelectRooms = driver.findElements(By.xpath("//ul[@class='select2-results__options']/li"));
 		for (int i = 0; i < ddnSelectRooms.size(); i++) {
-			List<WebElement> ddnSelectRooms1 = driver.findElements(By.xpath("//ul[@class='select2-results__options']/li"));
+			List<WebElement> ddnSelectRooms1 = driver
+					.findElements(By.xpath("//ul[@class='select2-results__options']/li"));
 			ddnSelectRooms1.get(i).click();
 			ddnRoomType.click();
 
@@ -61,10 +66,10 @@ public class HotelBooking {
 
 		WebElement txtDateCheckIn = driver.findElement(By.name("check_in"));
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].setAttribute('value','2024-11-25')", txtDateCheckIn);
+		js.executeScript("arguments[0].setAttribute('value','2024-12-29')", txtDateCheckIn);
 
 		WebElement txtDateCheckOut = driver.findElement(By.name("check_out"));
-		js.executeScript("arguments[0].setAttribute('value','2024-11-27')", txtDateCheckOut);
+		js.executeScript("arguments[0].setAttribute('value','2024-12-31')", txtDateCheckOut);
 
 		WebElement ddnNoOfRooms = driver.findElement(By.id("no_rooms"));
 		select = new Select(ddnNoOfRooms);
@@ -92,7 +97,7 @@ public class HotelBooking {
 		int size = lstHotelName.size();
 		WebElement lastHotelName = lstHotelName.get(size - 1);
 		String textLastHotelName = lastHotelName.getText();
-		System.out.println("Last Hotel Name : " +textLastHotelName);
+		System.out.println("Last Hotel Name : " + textLastHotelName);
 
 		// Print 5th Hotel Price
 		List<WebElement> lstHotelPrice = driver.findElements(By.xpath("//div[@class='prize']//h2"));
@@ -103,8 +108,8 @@ public class HotelBooking {
 		// select 3rd Hotel name
 		List<WebElement> lstBtnContinue = driver.findElements(By.xpath("//a[@class='btn filter_btn']"));
 		WebElement btnThirdHotel = lstBtnContinue.get(2);
-		btnThirdHotel.click(); 
-		
+		btnThirdHotel.click();
+
 		// Alert Message
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
@@ -112,8 +117,8 @@ public class HotelBooking {
 		// 4.Book Hotel
 		WebElement bookedHotelName = driver.findElement(By.xpath("//h2[@class='px-3 py-2']"));
 		String textBookedHotel = bookedHotelName.getText();
-		String substring = textBookedHotel.substring(13);
-		System.out.println("Booked Hotel Name : " +substring);
+		String bookedHotelsubstring = textBookedHotel.substring(13);
+		System.out.println("Booked Hotel Name : " + bookedHotelsubstring);
 
 		Thread.sleep(3000);
 
@@ -184,10 +189,10 @@ public class HotelBooking {
 		select = new Select(ddnCardMonth);
 		select.selectByVisibleText("November");
 
-		WebElement ddnCardYear = driver.findElement(By.id("card_year"));
-		select = new Select(ddnCardYear);
-		select.selectByVisibleText("2024");
-
+		/*
+		 * WebElement ddnCardYear = driver.findElement(By.id("card_year")); select = new
+		 * Select(ddnCardYear); select.selectByVisibleText("2024");
+		 */
 		WebElement txtCVV = driver.findElement(By.id("cvv"));
 		txtCVV.sendKeys("123");
 
@@ -210,18 +215,23 @@ public class HotelBooking {
 
 		WebElement btnMyAccount = driver.findElement(By.xpath("//a[contains(text(),'My Account')]"));
 		btnMyAccount.click();
+		
+	String bookingText = driver.findElement(By.xpath("(//div[@class='col-md-5'])[1]")).getText();
+	String bookingSubString = bookingText.substring(0, 8);
+	System.out.println(bookingSubString);
 
 		// search order Id
 		WebElement txtSearch = driver.findElement(By.name("search"));
-		js.executeScript("arguments[0].setAttribute('value','" +orderIdSubString+"');", txtSearch );
+		js.executeScript("arguments[0].setAttribute('value','" + orderIdSubString + "');", txtSearch);
 
 		WebElement btnEdit = driver.findElement(By.xpath("//button[text()='Edit']"));
 		btnEdit.click();
 
 		// Enter only CheckInDate
-		WebElement txtEditCheckinDate = driver.findElement(By.xpath("//input[@class='form-control from hasDatepicker']"));
-		js.executeScript("arguments[0].setAttribute('value','2024-11-27')", txtEditCheckinDate);
-		
+		WebElement txtEditCheckinDate = driver
+				.findElement(By.xpath("//input[@class='form-control from hasDatepicker']"));
+		js.executeScript("arguments[0].setAttribute('value','2024-12-30')", txtEditCheckinDate);
+
 		driver.findElement(By.xpath("//button[text()='Confirm']")).click();
 
 		// print Booking updated successfully
@@ -232,8 +242,12 @@ public class HotelBooking {
 
 		// search order Id
 		WebElement txtSearchCancel = driver.findElement(By.name("search"));
-		js.executeScript("arguments[0].setAttribute('value', '"+orderIdSubString+"');", txtSearchCancel);
-		
+		js.executeScript("arguments[0].setAttribute('value', '" + orderIdSubString + "');", txtSearchCancel);
+
+		String actOrderIdtext = driver.findElement(By.xpath("//div[@class='room-code']")).getText();
+		String substring = actOrderIdtext.substring(1, 11);
+		System.out.println("Actual order id text: " + substring);
+
 		driver.findElement(By.xpath("//a[text()='Cancel']")).click();
 		Alert alert2 = driver.switchTo().alert();
 		alert2.accept();
@@ -244,11 +258,14 @@ public class HotelBooking {
 
 		// search order Id
 		WebElement txtSearchCancel2 = driver.findElement(By.name("search"));
-		js.executeScript("arguments[0].setAttribute('value','" +orderIdSubString+"');", txtSearchCancel2 );
+		js.executeScript("arguments[0].setAttribute('value','" + orderIdSubString + "');", txtSearchCancel2);
 
 		// print cancelled
 		String cancelText = driver.findElement(By.xpath("//button[text()='Cancelled']")).getText();
 		System.out.println(cancelText);
+
+		WebElement txtSearch1 = driver.findElement(By.name("search"));
+		js.executeScript("arguments[0].setAttribute('value','" + orderIdSubString + "');", txtSearch1);
 
 	}
 
